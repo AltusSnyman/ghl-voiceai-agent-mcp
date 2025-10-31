@@ -1,0 +1,1001 @@
+{
+  "name": "GHLVOICEAI MCP For Youtube",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "bearerAuth",
+        "path": "3d692005-a095-4d88-a856-2826dd4077fa"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        512,
+        -928
+      ],
+      "id": "1c47cdb8-f947-4d21-8bbb-6768a3db952d",
+      "name": "MCP Server Trigger",
+      "webhookId": "3d692005-a095-4d88-a856-2826dd4077fa",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "kIxWG0moqNMeANy4",
+          "name": "n8n_ghl_MCP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to search for a contact",
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer PUT-YOUR-PRIVATE-API-HERE"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"locationId\": \"YOUR-LOCATION-ID\",\n  \"pageLimit\": 100,\n  \"query\": \"{{$fromAI('query', 'contact details searched for name phone or email')}}\"\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -1936,
+        -80
+      ],
+      "id": "bf23700b-d48a-4771-b3dc-8cb8c244804d",
+      "name": "Search For Contact"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to send emails. Its important to have a contact ID firs. Use the search user tool to find the contact ID by email. If it doesnt exhist use the create contact to create one and get the contact id",
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/conversations/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer PUT-YOUR-PRIVATE-API-HERE"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"type\": \"Email\",\n  \"contactId\": \"{{$fromAI('contactId', 'The contactId on the contact ')}}\",\n  \"subject\": \"{{$fromAI('email_subjet', 'the subject of the  email')}}\",\n  \"html\": \"{{$fromAI('email_message', 'the message you want to send')}}\",\n  \"status\": \"pending\"\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -1376,
+        -112
+      ],
+      "id": "f49593b0-14cc-4111-add6-a0103d4606c0",
+      "name": "Send Email"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to search the intenret ",
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        960,
+        320
+      ],
+      "id": "f1eec882-6641-42aa-9e12-886722b00d4b",
+      "name": "Search the Internet",
+      "credentials": {
+        "perplexityApi": {
+          "id": "OWSVDPgkdQVTjJEs",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to create a Google Task",
+        "task": "MTI2MjcxNTg2MTMyOTk2OTQ2MTU6MDow",
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleTasksTool",
+      "typeVersion": 1,
+      "position": [
+        976,
+        -288
+      ],
+      "id": "e203d666-48cc-474b-80fc-1f067bcbce02",
+      "name": "Create a task in Google Tasks",
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "Sn7DndKwLzYT3uBj",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this to update the Google Sheet with the car travel log. If you need to log distance",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1sDPuBjK_miHRdbthYWlt7h_SNfZj9WRaa8VgVp-t_LY",
+          "mode": "list",
+          "cachedResultName": "Car ODO",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sDPuBjK_miHRdbthYWlt7h_SNfZj9WRaa8VgVp-t_LY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1sDPuBjK_miHRdbthYWlt7h_SNfZj9WRaa8VgVp-t_LY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now.setZone('Pacific/Auckland') }}",
+            "Distance": "={{ $fromAI('distance_travel', 'the distance in KM kilimoters') }}",
+            "Reason": "={{ $fromAI('reason_for_travel', 'reason for the travel') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Distance",
+              "displayName": "Distance",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reason",
+              "displayName": "Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        608
+      ],
+      "id": "98c2c74c-a17c-47fc-a926-7c9e656ab372",
+      "name": "Car Travel Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Ih0ydg0ZkQxDal5d",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to search airtable for private contacts. The colums are:\nColumn 1: First Name\nColumn 2: Last Name\nColumn 3: Email Address\nColumn 4: Phone Number\nColumn 5: Join Date\nColumn 6: Plan\nColumn 7: Notes\nColumn 8: Source\nColumn 9: Profile Picture\n",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "apprSmSONb8QsWVwd",
+          "mode": "list",
+          "cachedResultName": "Contacts",
+          "cachedResultUrl": "https://airtable.com/apprSmSONb8QsWVwd"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblbKF34tN4TxvcfM",
+          "mode": "list",
+          "cachedResultName": "Contact",
+          "cachedResultUrl": "https://airtable.com/apprSmSONb8QsWVwd/tblbKF34tN4TxvcfM"
+        },
+        "filterByFormula": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Filter_By_Formula', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        976,
+        16
+      ],
+      "id": "8735c55f-af68-4f77-8078-b11369d1567b",
+      "name": "Airtable Search Private Contacts",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "K0OmlWMi6EArcLH5",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Search GHL Contact\nThis module is the starting point of the system. It searches for a contact in Go HighLevel using any query — such as email, phone number, or even part of a name — and then returns all contact details to your LLM.\n\nSetup Instructions\n\nStep 1: Replace PUT-YOUR-PRIVATE-API-HERE with your private integration API key.\nStep 2: Replace YOUR-LOCATION-ID with your Go HighLevel location ID (this is your sub-account ID, which can be found in your Go HighLevel account URL).",
+        "height": 576,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2048,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "89dddcb0-a573-40d6-8e7c-cdcd395f3299",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Understand GHL and Contacts\nFind or Create the Contact\n\nThe first step in any workflow is to find the Contact ID by searching for the user’s email or phone number.\n\nIf the contact does not exist, the system will create a new contact and generate a new Contact ID.\n\nUse the Contact ID\n\nOnce you have the Contact ID, it becomes the reference for everything you do with that user — such as:\n\nSending a message\n\nAdding to a pipeline\n\nUpdating fields\n\nTriggering automations\n\nIn short, every task in Go HighLevel begins with identifying or creating the Contact ID, and then performing an action linked to that ID.\n+-------------------------------------------------------+\n|                     Go HighLevel CRM                  |\n+-------------------------------------------------------+\n|                                                       |\n|   [ STEP 1 ]  Identify or Create Contact              |\n|   --------------------------------------------------- |\n|   Input: Email or Phone Number                        |\n|                                                       |\n|        ┌──────────────────────────────┐               |\n|        │  Search Existing Contact     │               |\n|        └──────────────────────────────┘               |\n|                   │                                   |\n|                   ▼                                   |\n|         ┌────────────────────┐                        |\n|         │  Contact Found?    │                        |\n|         └────────────────────┘                        |\n|              │ Yes                 │ No               |\n|              ▼                     ▼                  |\n|   ┌────────────────────┐    ┌────────────────────┐    |\n|   │  Get Contact ID    │    │  Create New User   │    |\n|   └────────────────────┘    └────────────────────┘    |\n|              │                     │                  |\n|              └──────────┬──────────┘                  |\n|                         ▼                             |\n|               ┌────────────────────┐                  |\n|               │  Return Contact ID │                  |\n|               └────────────────────┘                  |\n|                                                       |\n|   [ STEP 2 ]  Execute Action                          |\n|   --------------------------------------------------- |\n|   Use Contact ID to:                                  |\n|     - Send SMS / Email                                |\n|     - Add to Workflow or Campaign                     |\n|     - Update Contact Info                             |\n|     - Trigger Automation                              |\n|                                                       |\n+-------------------------------------------------------+\n",
+        "height": 1408,
+        "width": 720,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2768,
+        -544
+      ],
+      "typeVersion": 1,
+      "id": "df6788e0-c1c4-4c1a-bf0b-92db7dd2af2a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Send GHL Email\nThis module handles the Email portion of the Send Message system.\nTo send an email, set the message type to \"Email\" and include the HTML-formatted message body. The system automatically determines the appropriate fields using AI, so you don’t need to manually provide the location ID.\n\nSetup Instructions\n\nStep 1: Replace PUT-YOUR-PRIVATE-API-HERE with your private integration API key.\nStep 2: The module uses the variable $fromAi to help the AI dynamically map and fill the correct fields (such as subject, recipient, and sender information).",
+        "height": 560,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1536,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "6edceb6e-2102-4184-8a18-8391a7fbcbbb",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Send GHL SMS\nThis module handles the SMS portion of the Send Message system.\nTo send a text message, set the message type to \"SMS\". The message content and Contact ID are both determined automatically by the AI, so no manual setup for these fields is required.\n\nSetup Instructions\n\nStep 1: Replace PUT-YOUR-PRIVATE-API-HERE with your private integration API key.",
+        "height": 528,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1536,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "70ff79c0-04a1-4419-a915-f8dadca4e6e2",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Search the internet\n",
+        "height": 256,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        896,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "81a766c9-7ebb-4077-92a7-3075cf777c6f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Create a Google Task\n",
+        "height": 256,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        896,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "11e0ea14-9254-40b0-831e-da256619ff26",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Update Travel Log",
+        "height": 256,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        896,
+        512
+      ],
+      "typeVersion": 1,
+      "id": "f4b4c5ab-2643-4e0b-ad52-30992ef0a3b1",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Check Private Contacts",
+        "height": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        896,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "7641df65-6e06-44d3-b66e-b12d5dec493a",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to send Private Emails from a personal email address",
+        "toRecipients": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "bodyContent": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTool",
+      "typeVersion": 2,
+      "position": [
+        976,
+        -592
+      ],
+      "id": "568f8000-7f8a-4ea0-8188-36a4fc4b22c5",
+      "name": "Send email From Personal Inobx",
+      "webhookId": "585d5269-1d96-407c-b411-f1f07a06444e",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "lRwlE23kPwv9jXMp",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Send Emails From Private Mailbox",
+        "height": 256,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        896,
+        -688
+      ],
+      "typeVersion": 1,
+      "id": "36efcdf0-7fd2-4f64-8613-07b40bc3b73e",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to get all the workflows and get the workflow ID",
+        "url": "https://services.leadconnectorhq.com/workflows/?locationId=YOUR-LOCATION-ID",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer PUT-YOUR-PRIVATE-API-HERE"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        -112
+      ],
+      "id": "eb04753c-5d5d-4a5f-8d2a-59a76b1aa697",
+      "name": "Get all the workflows"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to add an contact to a workflow using the workflow ID and the Contact ID",
+        "method": "POST",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{$fromAI('contactId', 'the contactid freceive from searching from a contact')}}/workflow/{{$fromAI('workflowId', 'the workflowId receive from searching for workflows')}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer PUT-YOUR-PRIVATE-API-HERE"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -256,
+        560
+      ],
+      "id": "d4814ae0-2792-434f-8bfb-69589a229492",
+      "name": "Add Contact To Workflow"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to add a note to a contact using the contact ID",
+        "method": "POST",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{$fromAI('contactId', 'the contactid freceive from searching from a contact')}}/notes",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer PUT-YOUR-PRIVATE-API-HERE"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "body",
+              "value": "={{ $fromAI('note', 'the note to add to the contact') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        176,
+        560
+      ],
+      "id": "3a1fd4c9-f7b4-4a10-86a0-1357061ea695",
+      "name": "Add a note to contact"
+    },
+    {
+      "parameters": {
+        "content": "## URL Create Note\nhttps://marketplace.gohighlevel.com/docs/ghl/contacts/create-note",
+        "height": 704,
+        "width": 352
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "23d3cef6-dd88-4790-90c1-a81a0b7b0583",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "## Create Contact\nhis module is used when a contact cannot be found during the search process, or when you specifically request to create a new user.\nIt collects the first name, last name, email, and phone number, then creates a new contact in Go HighLevel and returns the newly generated Contact ID.\n\nSetup Instructions\n\nStep 1: Replace PUT-YOUR-PRIVATE-API-HERE with your private integration API key.\nStep 2: Replace YOUR-LOCATION-ID with your Go HighLevel location ID (this is your sub-account ID, which can be found in your Go HighLevel account URL).",
+        "height": 576,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2048,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "68b2aa5f-a728-4648-b1b0-1370bfbb9819",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## EVERYTHING START HERE, GET A CONTACTID\n",
+        "height": 80,
+        "width": 560
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2752,
+        -624
+      ],
+      "typeVersion": 1,
+      "id": "b8d75215-5380-412d-a5fc-105359d93bc5",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "## These are all part of the Send Message API Key. Email / SMS . \nhttps://marketplace.gohighlevel.com/docs/ghl/conversations/send-a-new-message",
+        "height": 1328,
+        "width": 384
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1568,
+        -688
+      ],
+      "typeVersion": 1,
+      "id": "f2154b4a-f0ad-406d-a11d-29105740e753",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "## URL Create Contact\nhttps://marketplace.gohighlevel.com/docs/ghl/contacts/create-contact",
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2048,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "64f7dae4-de52-45c4-b606-9ad50e33ea32",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "## URL Search Contact\nhttps://marketplace.gohighlevel.com/docs/ghl/contacts/search-contacts-advanced",
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2048,
+        -688
+      ],
+      "typeVersion": 1,
+      "id": "2d6fe63d-41c6-4978-8d09-cdc6cb4d7a4e",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Send a SMS message",
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/conversations/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer PUT-YOUR-PRIVATE-API-HERE"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "type",
+              "value": "SMS"
+            },
+            {
+              "name": "contactId",
+              "value": "={{$fromAI('contactId', 'The contactId on the contact ')}}"
+            },
+            {
+              "name": "message",
+              "value": "={{$fromAI('message', 'the message to sms')}}"
+            },
+            {
+              "name": "status",
+              "value": "pending"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -1392,
+        464
+      ],
+      "id": "8a24673c-40c3-46f5-bff9-2669c8508e28",
+      "name": "Send SMS"
+    },
+    {
+      "parameters": {
+        "content": "## Control Everything Else With a Workflow\nMost advanced actions in Go HighLevel — like tagging a contact, adding opportunities, assigning owners, moving a contact in a pipeline — are easier and safer to handle using Workflows, not direct API calls.\n\nInstead of trying to set all those fields manually in the API (which can lead to bad data, wrong tags, wrong pipeline stage, etc.), you can just send the contact into an existing workflow and let HighLevel do the rest.\n\nThis gives you:\n\nFewer variables to manage\n\nLess chance of a misread or misconfigured field\n\nClean handling of things that are easy to mess up by hand, like opportunities, tagging, and user assignment\n\nHow it works\n\nGet the workflowId\n\nFirst, list all available workflows.\n\nFrom that list, choose the workflow you want and grab its workflowId.\n\nSend the contact to that workflow\n\nYou then pass the contactId into that workflow.\n\nThe workflow takes over. It can apply tags, create/update opportunities, assign the contact to a user, etc.\n\nYou’re basically saying:\n“Here’s the contact. Run the standard process on them.”\n\nWhy this matters\n\nYou don’t have to manually build an API call for every action.\n\nYou keep logic in one place: inside the workflow.\n\nYou make the AI’s job simpler. It only needs two things: workflowId and contactId.\n\nSummary for implementation\n\nUse List Workflows to get your workflowId.\n\nSend the contactId into that workflowId.\n\nLet HighLevel handle tags, opportunities, ownership, and status changes automatically.",
+        "height": 1488,
+        "width": 448,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1072,
+        -672
+      ],
+      "typeVersion": 1,
+      "id": "c8b8ca1f-9e47-4486-b948-278ef93e7815",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "## URL Get all Workflow IDs\nhttps://marketplace.gohighlevel.com/docs/ghl/workflows/get-workflow",
+        "height": 736,
+        "width": 368
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        -688
+      ],
+      "typeVersion": 1,
+      "id": "5c2040f8-00ff-4e83-86a5-286babca8b74",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "## URL Add to Workflow\nhttps://marketplace.gohighlevel.com/docs/ghl/contacts/add-contact-to-workflow",
+        "height": 688,
+        "width": 368
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "43cf8675-3346-482e-b8d1-9c5f1ca5b452",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "## Add to Workflow\nThis module pushes a contactId into a specific workflowId.\nThe entire operation is handled directly through the URL, making it fast and simple to execute. Once the contact is sent to the workflow, all actions defined inside that workflow (like tagging, assigning, or creating opportunities) will automatically run for that contact.\n\nSetup Instructions\n\nStep 1: Replace PUT-YOUR-PRIVATE-API-HERE with your private integration API key.\n\nThat’s it — no need to modify the location or workflow variables, as they are already defined in the URL.",
+        "height": 528,
+        "width": 320,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "cc786544-0ba2-485c-b926-9733058f58dc",
+      "name": "Sticky Note21"
+    },
+    {
+      "parameters": {
+        "content": "## Get All Workflows\nThis module retrieves all workflows for a specific Go HighLevel location (sub-account). It returns the list of workflows so you can grab the workflowId you want to use.\n\nSetup Instructions\n\nStep 1: Replace YOUR-LOCATION-ID with your Go HighLevel location ID.\n\nThis is your sub-account ID, and you can find it in the Go HighLevel URL.\n\nStep 2: Replace PUT-YOUR-PRIVATE-API-HERE with your private integration API key.\n\nOnce you have the workflowId, you can send a contactId into that workflow to trigger automations (tagging, opportunities, assignments, etc.) inside HighLevel.",
+        "height": 592,
+        "width": 320,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        -576
+      ],
+      "typeVersion": 1,
+      "id": "476a5a99-f786-4957-a431-8abd60d33744",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "## Create Note\nhis module adds a note to an existing contact in Go HighLevel.\nIt uses the contactId to identify the contact and attaches a message body (the content of the note). This is useful for logging interactions, updates, or AI-generated summaries directly under a contact’s record.\n\nSetup Instructions\n\nStep 1: Replace PUT-YOUR-PRIVATE-API-HERE with your private integration API key.\n\nOnce configured, the module will take the provided contactId and message body, then create a note associated with that contact.",
+        "height": 544,
+        "width": 304,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "52b1b92a-f70f-49ce-9df8-8789bfc341c8",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "## ⬇️⬇️==========================================================================EVERYTHING Go HIGHLEVEL===========================================================================================⬇️⬇️\n",
+        "height": 80,
+        "width": 3104
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2752,
+        -1024
+      ],
+      "typeVersion": 1,
+      "id": "05183dd4-b83f-4855-ba7b-2a9cb302f931",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "##⬇️⬇️OTHER CONNECTIONS ⬇️⬇️\n",
+        "height": 80,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        880,
+        -1024
+      ],
+      "typeVersion": 1,
+      "id": "a1e5b9bd-b31b-4f6f-afe7-5f78196286db",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Create a Contact in Go Highlevel",
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer PUT-YOUR-PRIVATE-API-HERE"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "firstName",
+              "value": "={{ $fromAI('first_name', 'The first name of the contact') }}"
+            },
+            {
+              "name": "lastName",
+              "value": "={{ $fromAI('last_name', 'The last name of the contact') }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $fromAI('email', 'The email of contact') }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $fromAI('phone_number', 'The phone number of the contact that includes the country code') }}"
+            },
+            {
+              "name": "locationId",
+              "value": "YOUR-LOCATION-ID"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -1936,
+        752
+      ],
+      "id": "259d41bf-3522-4f9b-b99b-e16ff45d5700",
+      "name": "Create a Contact in Go Highlevel1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Search For Contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search the Internet": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a task in Google Tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Car Travel Log": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable Search Private Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email From Personal Inobx": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all the workflows": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Contact To Workflow": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add a note to contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send SMS": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a Contact in Go Highlevel1": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b741a6e8-a9ea-47b2-9031-219e52925d51",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b61aedbe620a9ab6b4b15b9257c74efa5e547789a5eb9fdb81af6ba2eb337831"
+  },
+  "id": "GoU0UMiVGTKDf2Up",
+  "tags": []
+}
