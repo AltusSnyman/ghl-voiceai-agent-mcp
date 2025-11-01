@@ -4,23 +4,6 @@ Welcome to the complete guide for building professional voice AI agents with Go 
 
 ---
 
-## 🎯 Quick Links - Get Started Here!
-
-### 🚀 Essential Tools & Resources
-
-**Get Go HighLevel:**
-- 🎁 [Unlimited Free GHL Accounts](https://www.skool.com/thevoiceaiagency) - Join The Voice AI Agency
-- 🆓 [14-Day Free Agency Trial](https://www.gohighlevel.com/?fp_ref=your-login39) - Start building today
-
-**Server & Hosting:**
-- 💻 [Hostinger VPS for N8N](https://hostinger.com/altcutman) - Use code: **ALTCUTMAN** for discount
-
-**Free Resources:**
-- 🎁 [Free AI Agency Resources](https://www.skool.com/the-ai-agency-free-resources-9832)
-- 🤝 [Connect with Altus](https://systempros.ai/links)
-
----
-
 ## 📺 Start Here: Watch The Full Course
 
 **Click the image below to watch the complete walkthrough on YouTube:**
@@ -38,6 +21,23 @@ Want a visual reference? Check out our complete Canva presentation:
 [![View Canva Presentation](./assets/canva.png)](https://www.canva.com/design/DAG226lwGHg/ZVgI_JgJ8jhEPeUiwvOfJQ/view?utm_content=DAG226lwGHg&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h1396778802)
 
 **Click the image above** to view the full presentation with detailed screenshots and explanations.
+
+---
+
+## 🎯 Quick Links - Get Started Here!
+
+### 🚀 Essential Tools & Resources
+
+**Get Go HighLevel:**
+- 🎁 [Unlimited Free GHL Accounts](https://www.skool.com/thevoiceaiagency) - Join The Voice AI Agency
+- 🆓 [14-Day Free Agency Trial](https://www.gohighlevel.com/?fp_ref=your-login39) - Start building today
+
+**Server & Hosting:**
+- 💻 [Hostinger VPS for N8N](https://hostinger.com/altcutman) - Use code: **ALTCUTMAN** for discount
+
+**Free Resources:**
+- 🎁 [Free AI Agency Resources](https://www.skool.com/the-ai-agency-free-resources-9832)
+- 🤝 [Connect with Altus](https://systempros.ai/links)
 
 ---
 
