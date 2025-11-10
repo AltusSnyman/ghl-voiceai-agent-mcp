@@ -8,7 +8,7 @@ Welcome to the complete guide for building professional voice AI agents with Go 
 
 **Click the image below to watch the complete walkthrough on YouTube:**
 
-[![Watch the Full Course](./assets/youtube.png)](https://youtu.be/be0XoIvg9G4)
+[![Watch the Full Course](./assets/youtube.png)](https://youtu.be/P8mQC56w-PE)
 
 ⚠️ **IMPORTANT:** Click the image above to start the video tutorial. This is your step-by-step guide!
 
